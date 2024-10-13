@@ -8,7 +8,7 @@ app = Flask(__name__, template_folder='templetes')
 def get_db_connection():
     try:
         conn = psycopg2.connect(
-            postgresql://${{PGUSER}}:${{POSTGRES_PASSWORD}}@${{RAILWAY_PRIVATE_DOMAIN}}:5432/${{PGDATABASE}}
+            postgresql://postgres:ZabAclIwcqEYJYyiJPMbqOyeuEIzJmkK@postgres.railway.internal:5432/railway
         )
         return conn
     except psycopg2.Error as e:
