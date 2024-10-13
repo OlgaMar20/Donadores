@@ -35,7 +35,7 @@ def buscar():
             # Consulta a la base de datos
             cur.execute('''
                 SELECT nombre, tipo_sangre, latitud, longitud
-                FROM usuarios
+                FROM donadores
                 WHERE tipo_sangre = %s
             ''', (tipo_sangre,))
 
