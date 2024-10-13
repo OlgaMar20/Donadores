@@ -8,7 +8,7 @@ app = Flask(__name__, template_folder='templetes')
 def get_db_connection():
     try:
         conn = psycopg2.connect(
-            dbname=os.getenv('DB_NAME', 'railway'),
+            dbname=os.getenv('DB_NAME', 'donadores'),
             user=os.getenv('DB_USER', 'postgres'),
             password=os.getenv('DB_PASSWORD', 'ZabAclIwcqEYJYyiJPMbqOyeuEIzJmkK'),
             host=os.getenv('DB_HOST', 'postgres.railway.internal'),
