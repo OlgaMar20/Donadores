@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mapa de Donantes</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        header {
+            background-color: #4CAF50;
+            color: white;
+            padding: 15px 0;
+            text-align: center;
+            font-size: 24px;
+        }
+        #container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 20px auto;
+            text-align: center;
+        }
+        #map {
+            height: 600px;
+            width: 100%;
+            border: 2px solid #ccc;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+        #search-form {
+            margin: 20px auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        #search-form input[type="text"] {
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-right: 10px;
+        }
+        #search-form button {
+            padding: 10px 20px;
+            font-size: 16px;
+            color: white;
+            background-color: #4CAF50;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        #search-form button:hover {
+            background-color: #45a049;
+        }
+        footer {
+            margin-top: 20px;
+            text-align: center;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Mapa de Donantes</h1>
+    </header>
+
+    <div id="container">
+        <form id="search-form">
+            <label for="tipo_sangre">Tipo de Sangre:</label>
+            <input type="text" id="tipo_sangre" name="tipo_sangre" placeholder="Ej: O+">
+            <button type="button" onclick="buscar()">Buscar</button>
+        </form>
+
+        <div id="map"></div>
+    </div>
+
+    <footer>
+        &copy; 2024 Plataforma de Donantes de Sangre
+    </footer>
+
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script>
+        var map = L.map('map').setView([19.245003, -103.724621], 9); // Vista inicial de Colima
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+        function agregarPuntos(donantes) {
+            map.eachLayer(function(layer) {
+                if (layer instanceof L.Marker) {
+                    map.removeLayer(layer);
+                }
+            });
+            donantes.forEach(function(donante) {
+                L.marker([donante.latitud, donante.longitud])
+                    .bindPopup(`<b>${donante.nombre}</b><br>Tipo de Sangre: ${donante.tipo_sangre}`)
+                    .addTo(map);
+            });
+        }
+
+        function buscar() {
+            var tipo_sangre = document.getElementById('tipo_sangre').value;
+            fetch('/buscar?tipo_sangre=' + encodeURIComponent(tipo_sangre))
+                .then(response => response.json())
+                .then(donantes => agregarPuntos(donantes))
+                .catch(error => console.error('Error al cargar los datos de donantes:', error));
+                // Si ingresa un tipo de sangre no existente, se muestra un mensaje de error
+                if (tipo_sangre == "") {
+                    alert("Por favor, ingrese un tipo de sangre válido");
+                }
+                // Si escribe con minúsculas, se convierte a mayúsculas
+                else {
+                    document.getElementById('tipo_sangre').value = tipo_sangre.toUpperCase();
+                }
+        }
+
+        // Cargar puntos por defecto al iniciar
+        buscar();
+    </script>
+</body>
+</html>
