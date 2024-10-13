@@ -8,11 +8,11 @@ app = Flask(__name__, template_folder='templetes')
 def get_db_connection():
     try:
         conn = psycopg2.connect(
-            dbname=os.getenv('DB_NAME', 'donadores'),
-            user=os.getenv('DB_USER', 'postgres'),
-            password=os.getenv('DB_PASSWORD', 'ZabAclIwcqEYJYyiJPMbqOyeuEIzJmkK'),
-            host=os.getenv('DB_HOST', 'postgres.railway.internal'),
-            port=os.getenv('DB_PORT', '5432')
+            dbname=os.getenv('PGDATABASE', 'railway'),
+            user=os.getenv('PGUSER', 'postgres'),
+            password=os.getenv('PGPASSWORD', 'IKfDqACBskWWkuCEIQxSRvpOZRnplxAQ'),
+            host=os.getenv('PGHOST', 'postgres.railway.internal'),
+            port=os.getenv('PGPORT', '5432')
         )
         return conn
     except psycopg2.Error as e:
